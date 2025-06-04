@@ -52,10 +52,6 @@ lerna-debug.log*
 htmlcov/
 .pytest_cache/
 
-# Database
-*.db
-*.sql
-
 # Miscellaneous
 .DS_Store
 

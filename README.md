@@ -35,13 +35,7 @@ cd tu-repo
 
 ### Instalación de Dependencias
 
-1. Accede al directorio del backend (ajusta la ruta si es necesario):
-
-    ```bash
-    cd backend
-    ```
-
-2. Crea y activa un entorno virtual:
+1. Crea y activa un entorno virtual:
 
     ```bash
     python -m venv venv
@@ -51,10 +45,11 @@ cd tu-repo
     source venv/bin/activate
     ```
 
-3. Instala las dependencias:
+2. Instala las dependencias:
 
     ```bash
     pip install -r requirements.txt
+    pip install -r dev-requirements.txt
     ```
 
 ### Configuración de la Base de Datos
