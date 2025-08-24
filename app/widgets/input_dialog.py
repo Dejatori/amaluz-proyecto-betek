@@ -49,11 +49,13 @@ class InputDialog(tk.Toplevel):
             label_widget = ttk.Label(form_frame, text=label)
             label_widget.grid(row=i, column=0, padx=5, pady=5, sticky='e')
 
+            value = initial_values[i] if initial_values and len(initial_values) > i else None
+
             if 'fecha' in field.lower():
                 try:
                     initial_date = datetime.now()
-                    if initial_values and initial_values[i]:
-                        date_str = str(initial_values[i])
+                    if value:
+                        date_str = str(value)
                         if '/' in date_str:
                             # Manejar formato DD/MM/YYYY
                             initial_date = datetime.strptime(date_str, '%d/%m/%Y')
@@ -99,29 +101,32 @@ class InputDialog(tk.Toplevel):
                 # Crear área de texto para texto más largo
                 text_widget = tk.Text(form_frame, height=4, width=40)
                 text_widget.grid(row=i, column=1, padx=5, pady=5, sticky='w')
-                if initial_values:
-                    text_widget.insert('1.0', initial_values[i+1])
+                if value:
+                    text_widget.insert('1.0', value)
                 self.entries[field] = text_widget
 
             elif 'correo' in field.lower():
                 # Crear entrada de correo electrónico con validación
                 entry = ttk.Entry(form_frame, width=40)
                 entry.grid(row=i, column=1, padx=5, pady=5, sticky='w')
-                if initial_values:
-                    entry.insert(0, initial_values[i+1])
+                if value:
+                    entry.insert(0, value)
                 self.entries[field] = entry
 
                 # Agregar indicador de validación de correo electrónico
                 self.email_valid = ttk.Label(form_frame, text="✗", foreground='red')
                 self.email_valid.grid(row=i, column=2, padx=5)
-                entry.bind('<KeyRelease>', lambda e: self.validate_email(entry.get()))
+                entry.bind('<KeyRelease>', lambda e, entry=entry: self.validate_email(entry.get()))
+                # Valida inmediatamente la entrada inicial si existe
+                if value:
+                    self.validate_email(value)
 
             else:
                 # Crear entrada estándar
                 entry = ttk.Entry(form_frame, width=40)
                 entry.grid(row=i, column=1, padx=5, pady=5, sticky='w')
-                if initial_values:
-                    entry.insert(0, initial_values[i+1])
+                if value:
+                    entry.insert(0, value)
                 self.entries[field] = entry
 
         # Marco de botones
@@ -138,7 +143,7 @@ class InputDialog(tk.Toplevel):
         Args:
             email (str): Correo electrónico a validar.
         """
-        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        pattern = r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         is_valid = bool(re.match(pattern, email))
         self.email_valid.config(
             text="✓" if is_valid else "✗",

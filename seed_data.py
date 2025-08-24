@@ -17,11 +17,11 @@ from app.db.data_generation.usuarios import (
     get_usuarios_activos_clientes,
 )
 from app.db.data_generation.proveedores import create_proveedores
-from app.db.data_generation.productos import create_productos, get_productos
+from app.db.data_generation.productos import create_productos
 from app.db.data_generation.inventario import create_inventario_inicial
 from app.db.data_generation.pedidos import create_pedidos
-from app.db.data_generation.descuentos import create_descuentos, get_descuentos
-from app.db.data_generation.carrito import create_carrito, get_carritos
+from app.db.data_generation.descuentos import create_descuentos
+from app.db.data_generation.carrito import create_carrito
 
 # Configuración de logging
 configure_logging()

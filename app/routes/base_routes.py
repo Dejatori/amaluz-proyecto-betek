@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
+
 from app.services.base_service import BaseService
 from app.models import db
+from sqlalchemy import inspect
 
 class BaseRoutes:
     """
@@ -11,6 +13,7 @@ class BaseRoutes:
         model (db.Model): Modelo de la base de datos para el cual se crean las rutas.
         required_fields (list): Lista de campos requeridos para las operaciones CRUD.
         endpoint (str): Nombre del endpoint para los mensajes de respuesta.
+        primary_key_field (str): Nombre del campo de clave primaria del modelo.
     """
 
     def __init__(self, service, model, required_fields, endpoint):
@@ -27,6 +30,18 @@ class BaseRoutes:
         self.model = model
         self.required_fields = required_fields
         self.endpoint = endpoint
+        # Obtener dinámicamente el nombre del campo de clave primaria
+        self.primary_key_field = self._get_primary_key_field()
+
+    def _get_primary_key_field(self):
+        """
+        Obtiene el nombre del campo de clave primaria del modelo.
+
+        Returns:
+            str: Nombre del campo de clave primaria.
+        """
+        mapper = inspect(self.model)
+        return mapper.primary_key[0].name
 
     def _get_pagination_params(self):
         """
@@ -93,32 +108,35 @@ class BaseRoutes:
         Returns:
             Response: Respuesta con los datos paginados y la información de paginación.
         """
-        page, page_size, filter_text = self._get_pagination_params()
-        query = self.model.query
+        try:
+            page, page_size, filter_text = self._get_pagination_params()
+            query = self.model.query
 
-        if filter_text:
-            query = query.filter(
-                db.or_(
-                    *[getattr(self.model, field).ilike(f'%{filter_text}%') for field in self.required_fields]
+            if filter_text:
+                query = query.filter(
+                    db.or_(
+                        *[getattr(self.model, field).ilike(f'%{filter_text}%') for field in self.required_fields]
+                    )
                 )
-            )
 
-        paginated_data, total_records, total_pages = self._paginate_query(query, page, page_size)
+            paginated_data, total_records, total_pages = self._paginate_query(query, page, page_size)
 
-        return jsonify({
-            'data': [{
-                'id': getattr(item, 'id'),
-                **{field: getattr(item, field) for field in self.required_fields}
-            } for item in paginated_data],
-            'pagination': {
-                'page': page,
-                'page_size': page_size,
-                'total_records': total_records,
-                'total_pages': total_pages,
-                'has_next': page < total_pages,
-                'has_prev': page > 1
-            }
-        })
+            return jsonify({
+                'data': [{
+                    self.primary_key_field: getattr(item, self.primary_key_field),
+                    **{field: getattr(item, field) for field in self.required_fields}
+                } for item in paginated_data],
+                'pagination': {
+                    'page': page,
+                    'page_size': page_size,
+                    'total_records': total_records,
+                    'total_pages': total_pages,
+                    'has_next': page < total_pages,
+                    'has_prev': page > 1
+                }
+            })
+        except Exception as e:
+            return self._handle_exception(e, f'Error al obtener {self.endpoint}s')
 
     def create(self):
         """

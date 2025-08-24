@@ -165,6 +165,7 @@ class CRUDApp:
                         ('id_empleado', 'ID Empleado', 50),
                         ('nombre', 'Nombre', 150),
                         ('correo', 'Correo Electrónico', 200),
+                        ('contraseña', 'Contraseña', 100),
                         ('telefono', 'Teléfono', 100),
                         ('fecha_nacimiento', 'Fecha de Nacimiento', 120),
                         ('genero', 'Género', 80),
@@ -308,7 +309,12 @@ class CRUDApp:
         if not config:
             return
 
-        fields = [(col[0], col[1]) for col in config['columns'] if col[0] != 'id']
+        # Obtener el nombre de la clave primaria dinámicamente
+        primary_key_field = config['columns'][0][0]  # El primer campo es siempre la clave primaria
+
+        # Filtrar campos excluyendo la clave primaria
+        fields = [(col[0], col[1]) for col in config['columns'] if col[0] != primary_key_field]
+
         dialog = InputDialog(self.root, "Agregar Registro", fields)
 
         if dialog.result:
@@ -340,8 +346,21 @@ class CRUDApp:
             return
 
         values = tree.item(selected_item)['values']
-        fields = [(col[0], col[1]) for col in config['columns'] if col[0] != 'id']
-        edit_values = list(values[1:])  # Convertir valores a lista para modificación
+
+        # Obtener el nombre de la clave primaria dinámicamente
+        columns = config['columns']
+        primary_key_field = columns[0][0]
+
+        # Map column field names to their index in the values list
+        # If you use a checkbox, values[0] is the checkbox, so offset by 1
+        offset = 1 if len(values) == len(columns) + 1 else 0
+
+        fields = []
+        edit_values = []
+        for idx, (field, label, *_) in enumerate(columns):
+            if field != primary_key_field:
+                fields.append((field, label))
+                edit_values.append(values[idx + offset])
 
         # Formatear fechas para campos que contienen 'fecha' en su nombre
         edit_values = self.format_dates_for_edit(fields, edit_values)
@@ -350,7 +369,7 @@ class CRUDApp:
 
         if dialog.result:
             try:
-                record_id = values[1]
+                record_id = values[offset]
                 response = requests.put(
                     f"{self.API_URL}/{config['endpoint']}/{record_id}",
                     json=dialog.result

@@ -148,7 +148,7 @@ class Producto(db.Model):
         fecha_registro (datetime): Fecha y hora de registro del producto, se establece automáticamente al crear el registro.
     """
     __bind_key__ = 'amaluz'
-    __tablename__ = 'producto'
+    __tablename__ = 'productos'
 
     id_producto = db.Column('id_producto', db.Integer, primary_key=True, autoincrement=True)
     nombre = db.Column('nombre', db.String(255), nullable=False)
