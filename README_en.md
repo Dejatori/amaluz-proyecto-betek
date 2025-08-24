@@ -1,6 +1,8 @@
+[![es](https://img.shields.io/badge/lang-es-yellow.svg)](https://github.com/Dejatori/amaluz-proyecto-betek/blob/main/README.md)
+
 ## Project Overview
 
-**Online Candle Shop Management** is an application designed to manage and operate an online candle store. The system provides a robust API built with Flask with a future migration plan to FastAPI (Python). It enables management of products, employees, and orders, and displays key metrics, integrating technologies such as MySQL, Redis, and Power BI for advanced analytics.
+**Amaluz** is an application designed to manage and operate an online candle store. The system provides a robust API built with Flask with a future migration plan to FastAPI (Python). It enables management of products, employees, and orders, and displays key metrics, integrating technologies such as MySQL, Redis, and Power BI for advanced analytics.
 
 ---
 
@@ -22,7 +24,7 @@ Before getting started, make sure the following are installed on your system:
 Clone the repository from GitHub:
 
 ```bash
-git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/Dejatori/amaluz-proyecto-betek.git
 cd your-repo
 ```
 
@@ -56,7 +58,7 @@ cd your-repo
 3. Copy the `.env.example` file to `.env` and configure the required environment variables, especially the database connection string:
 
     ```
-    DATABASE_URL="mysql+aiomysql://candle_user:your_secure_password@localhost:3306/candle_management"
+    DATABASE_URL="mysql+aiomysql://user:your_secure_password@localhost:3306/amaluz"
     ```
 4. (Optional) Apply initial migrations if the project includes them:
 

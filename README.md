@@ -1,6 +1,8 @@
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/Dejatori/amaluz-proyecto-betek/blob/main/README_en.md)
+
 ## Descripción General del Proyecto
 
-**Gestión de Comercio Online de Velas** es una aplicación diseñada para administrar y operar una tienda
+**Amaluz** es una aplicación diseñada para administrar y operar una tienda
 online de velas. El sistema ofrece una API robusta basada en Flask con futura migración a FastAPI (Python).
 Permite la gestión de productos, empleados, pedidos y la visualización de
 métricas clave, integrando tecnologías como MySQL, Redis y Power BI para análisis avanzados.
@@ -25,7 +27,7 @@ Antes de comenzar, asegúrate de tener instalado en tu sistema:
 Clona el repositorio desde GitHub:
 
 ```bash
-git clone https://github.com/tu-usuario/tu-repo.git
+git clone https://github.com/Dejatori/amaluz-proyecto-betek.git
 cd tu-repo
 ```
 
@@ -60,7 +62,7 @@ cd tu-repo
    conexión a la base de datos:
 
     ```
-    DATABASE_URL="mysql+aiomysql://usuario_velas:tu_contraseña_segura@localhost:3306/gestion_velas"
+    DATABASE_URL="mysql+aiomysql://usuario:tu_contraseña_segura@localhost:3306/amaluz"
     ```
 4. (Opcional) Aplica migraciones iniciales si el proyecto las incluye:
 
